@@ -1,15 +1,22 @@
-import mongoose from "mongoose";
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+dotenv.config();
 
-async function connectDatabase() {
-  try {
-    await mongoose.connect(process.env.MONGODB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("Connected to MongoDB database successfully.");
-  } catch (error) {
-    console.error("Error connecting to MongoDB database:", error);
-    process.exit(1); // Exit the process with failure
-  }
-}
+const connectDatabase = async () => {
+  const connecttion = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  });
+
+  connecttion.connect((err) => {
+    if (err) {
+      console.error("Error connecting to the database:", err);
+      return;
+    }
+    console.log("Connected to the MySQL database.");
+  });
+  return connecttion;
+};
 export default connectDatabase;
