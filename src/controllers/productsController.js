@@ -5,7 +5,7 @@ class getAllProducts {
   async show(req, res) {
     try {
       const { slug } = req.params;
-      const product = await productsModel.find({ idProduct: slug });
+      const product = await productsModel.find({ slug: slug });
       res.status(200).json({ product });
     } catch (error) {
       console.error("Error fetching product:", error);
