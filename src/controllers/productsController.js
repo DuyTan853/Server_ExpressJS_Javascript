@@ -1,6 +1,6 @@
 import connectDatabase from "../databases/conectDatabase.js";
 
-// Đợi connect với database
+// connect với database
 const connection = await connectDatabase();
 class getAllProducts {
   // [GET] show product by :slug
