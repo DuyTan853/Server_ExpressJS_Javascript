@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import routes from "./routes/index.js";
 import cors from "cors";
-import connectDatabase from "./databases/conectDatabase.js";
+import sequelize from "./databases/conectDatabase.js";
 
 const app = express();
 
@@ -17,9 +17,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-await connectDatabase(); // Connect to the database before starting the server
-
 routes(app); // Use the routes defined in src/routes/index.js
+
+await sequelize.sync(); // Connect to the database before starting the server
 
 app.listen(port, () => {
   console.log(`>>>>>>>_http://localhost:${port}`);
