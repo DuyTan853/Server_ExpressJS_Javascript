@@ -9,15 +9,14 @@ const Product = sequelize.define(
       primaryKey: true,
     },
 
-    nameProduct: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-
     slug: {
       type: DataTypes.STRING(255),
       allowNull: false,
       unique: true,
+    },
+    nameProduct: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
     },
 
     categoryId: {
@@ -26,11 +25,6 @@ const Product = sequelize.define(
     },
 
     brandId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-
-    tagId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -65,14 +59,14 @@ const Product = sequelize.define(
       allowNull: true,
     },
 
-    isFeatured: {
-      type: DataTypes.TINYINT,
-      defaultValue: 0,
-    },
-
     status: {
       type: DataTypes.STRING,
       defaultValue: "",
+    },
+
+    isFeatured: {
+      type: DataTypes.TINYINT,
+      defaultValue: 0,
     },
 
     allowInstallment: {

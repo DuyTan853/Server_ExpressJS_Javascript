@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import routes from "./routes/index.js";
 import cors from "cors";
 import sequelize from "./databases/conectDatabase.js";
+import path from "path";
 
 const app = express();
 
@@ -18,6 +19,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 routes(app); // Use the routes defined in src/routes/index.js
+
+// cho fe hiển thị ảnh đã lưu
+// Thư mục uploads serve static
+app.use("/uploads", express.static(path.join(process.cwd(), "src/uploads")));
 
 await sequelize.sync(); // Connect to the database before starting the server
 

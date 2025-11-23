@@ -15,30 +15,42 @@ class BrandsController {
   // [POST] add brands
   async addBrand(req, res) {
     try {
-      const { nameBrand, logo, isActive } = req.body;
+      const nameBrand = req.body.nameBrand;
+      const logo = req.file ? req.file.filename : null; //Nhận file từ req
       const brand = await Brand.create({
         nameBrand: nameBrand,
         logo: logo,
-        isActive: isActive || 1,
+        isActive: 1,
       });
       res.status(201).json({ message: "Add brand complete", brand });
     } catch (error) {
       console.error("Error creating product:", error);
-      res.status(500), json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   }
-  //[UPDATE] update brand
+  // [PATCH] update brand
   async updateBrand(req, res) {
     try {
-      const { id } = req.params; // Lấy id từ URL
-      const { nameBrand, logo, isActive } = req.body;
+      const { id } = req.params;
+      const { nameBrand, isActive } = req.body;
+      const logo = req.file ? req.file.filename : null;
 
-      await Brand.update(
-        { nameBrand: nameBrand, logo: logo, isActive: isActive }, // set brand mới
-        { where: { idBrand: id } } // tìm brand cũ
-      );
+      // Chuẩn bị object update, chỉ include những trường có giá trị
+      const updateData = {};
+      if (nameBrand !== undefined) updateData.nameBrand = nameBrand;
+      if (logo !== null) updateData.logo = logo;
+      if (isActive !== undefined) updateData.isActive = isActive;
 
-      res.json({ message: "Cập nhật brandId thành công" });
+      // Cập nhật
+      const [updated] = await Brand.update(updateData, {
+        where: { idBrand: id },
+      });
+
+      if (updated) {
+        return res.json({ message: "Cập nhật brand thành công" });
+      } else {
+        return res.status(404).json({ message: "Không tìm thấy brand này" });
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Lỗi server" });

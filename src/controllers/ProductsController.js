@@ -71,9 +71,9 @@ class ProductController {
   async showAllProducts(req, res) {
     try {
       const products = await Product.findAll({
-        // attributes: {
-        //   exclude: ["brandId", "categoryId", "tagId"], // BỎ NHỮNG CỘT KHÔNG MUỐN SHOW
-        // },
+        attributes: {
+          exclude: ["brandId", "categoryId", "tagId"], // BỎ NHỮNG CỘT KHÔNG MUỐN SHOW
+        },
         include: [
           {
             model: Brand,
@@ -88,23 +88,7 @@ class ProductController {
           {
             model: ProductSpec,
             as: "specs",
-            attributes: [
-              "id",
-              "productId",
-              "screenSize",
-              "screenTechnology",
-              "rearCamera",
-              "frontCamera",
-              "chipset",
-              "internalMemory",
-              "battery",
-              "operatingSystem",
-              "screenResolution",
-              "screenFeatures",
-              "cpuType",
-              "compatibility",
-              "quantity",
-            ],
+            attributes: { exclude: ["id", "productId"] },
           },
           {
             model: ProductImage,
@@ -122,6 +106,21 @@ class ProductController {
 
   // [POST] create new product
   async createProduct(req, res) {
+    // Đảm bảo key trùng với formData frontend gửi
+    const data = JSON.parse(req.body.FinalProduct);
+
+    // Lấy thumbnail (1 file)
+    const thumbnailFile = req.files["thumbnailPath"]?.[0];
+    const thumbnailPath = thumbnailFile ? `${thumbnailFile.filename}` : null;
+
+    // Lấy images (tối đa 10)
+    const imagesFile = req.files ? req.files["imagesFile"] : [];
+    const images = (imagesFile || []).map((file) => ({
+      imageUrl: `${file.filename}`,
+    }));
+
+    console.log(">>>>>>>>>>>>>>>>>>", thumbnailPath);
+
     try {
       const {
         idProduct,
@@ -129,20 +128,16 @@ class ProductController {
         slug,
         categoryId,
         brandId,
-        tagId,
         price,
         originalPrice,
         discountPercent,
-        thumbnail,
         shortDesc,
         description,
         isFeatured,
         status,
         allowInstallment,
         allowOnlinePrice,
-        images,
-        specs,
-      } = req.body;
+      } = data;
 
       // Kiểm tra các trường bắt buộc
       if (!nameProduct || !slug || !categoryId || !brandId || !price) {
@@ -152,15 +147,14 @@ class ProductController {
       const product = await Product.create(
         {
           idProduct: "PROD-" + idProduct,
-          nameProduct: nameProduct.trim().replace(/\s+/g, " "), // xóa khoảng trắng dư
+          nameProduct: nameProduct.trim().replace(/\s+/g, " "),
           slug,
           categoryId,
           brandId,
-          tagId: tagId || null,
           price,
           originalPrice,
           discountPercent: discountPercent || 0,
-          thumbnail: thumbnail || null,
+          thumbnail: thumbnailPath || null,
           shortDesc: shortDesc || null,
           description: description || null,
           isFeatured: isFeatured ? 1 : 0,
@@ -170,23 +164,26 @@ class ProductController {
           createdAt: new Date(),
           updatedAt: new Date(),
 
-          // Nested creation
-          images: images?.map((img) => ({ imageUrl: img.imageUrl })) || [],
+          // Tạo images kèm product
+          images: images,
+
+          // Tạo specs kèm product
           specs:
-            specs?.map((s) => ({
-              screenSize: s.screenSize || null,
-              screenTechnology: s.screenTechnology || null,
-              rearCamera: s.rearCamera || null,
-              frontCamera: s.frontCamera || null,
-              chipset: s.chipset || null,
-              internalMemory: s.internalMemory || null,
-              battery: s.battery || null,
-              operatingSystem: s.operatingSystem || null,
-              screenResolution: s.screenResolution || null,
-              screenFeatures: s.screenFeatures || null,
-              cpuType: s.cpuType || null,
-              compatibility: s.compatibility || null,
-              quantity: s.quantity || 0,
+            data.specs.map((s) => ({
+              productId: data.idProduct, // phải trùng idProduct vừa tạo
+              screenSize: s.screenSize,
+              screenTechnology: s.screenTechnology,
+              rearCamera: s.rearCamera,
+              frontCamera: s.frontCamera,
+              chipset: s.chipset,
+              internalMemory: s.internalMemory,
+              battery: s.battery,
+              operatingSystem: s.operatingSystem,
+              screenResolution: s.screenResolution,
+              screenFeatures: s.screenFeatures,
+              cpuType: s.cpuType,
+              compatibility: s.compatibility,
+              quantity: s.quantity,
             })) || [],
         },
         {
@@ -296,6 +293,13 @@ class ProductController {
   async deleteProduct(req, res) {
     try {
       const { id } = req.params;
+      // Xóa spec liên quan
+      await ProductSpec.destroy({ where: { productId: id } });
+
+      // Xóa images liên quan
+      await ProductImage.destroy({ where: { productId: id } });
+
+      // Xóa product
       const deleted = await Product.destroy({
         where: { idProduct: id },
       });

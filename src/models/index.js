@@ -10,7 +10,7 @@ Product.belongsTo(Brand, {
   targetKey: "idBrand",
   as: "brand",
 });
-Brand.hasMany(Product, {
+Brand.hasOne(Product, {
   foreignKey: "brandId",
   sourceKey: "idBrand",
   as: "products",
@@ -33,7 +33,7 @@ ProductSpec.belongsTo(Product, {
   foreignKey: "productId",
   as: "product",
 });
-Product.hasMany(ProductSpec, {
+Product.hasOne(ProductSpec, {
   foreignKey: "productId",
   as: "specs",
 });
