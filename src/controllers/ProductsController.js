@@ -201,54 +201,67 @@ class ProductController {
     }
   }
 
-  // [PUT] update product by slug
+  // [PATCH] update product by slug
   async updateProduct(req, res) {
+    console.log(">>> req.body:", req.body);
+    console.log(">>> req.files:", req.files);
+
+    // Parse FinalProduct
+    const data = JSON.parse(req.body.FinalProduct);
+
+    const thumbnailFile = req.files["thumbnailPath"]?.[0];
+    const thumbnailPath = thumbnailFile ? `${thumbnailFile.filename}` : null;
+
+    // Lấy images (tối đa 10)
+    const imagesFile = req.files ? req.files["imagesFile"] : [];
+    const images = (imagesFile || []).map((file) => ({
+      imageUrl: `${file.filename}`,
+    }));
+
     try {
       const { idProduct } = req.params;
+
       const {
         nameProduct,
         slug,
         categoryId,
         brandId,
-        tagId,
         price,
         originalPrice,
         discountPercent,
-        thumbnail,
         shortDesc,
         description,
         isFeatured,
         status,
         allowInstallment,
         allowOnlinePrice,
-        images,
         specs,
-      } = req.body;
+        thumbnail,
+      } = data;
 
       // UPDATE bảng Product
       await Product.update(
         {
-          nameProduct: nameProduct.trim(),
+          nameProduct: nameProduct?.trim() || null,
           slug,
           categoryId,
           brandId,
-          tagId: tagId || null,
           price,
           originalPrice,
           discountPercent: discountPercent || 0,
-          thumbnail: thumbnail || null,
           shortDesc: shortDesc || null,
           description: description || null,
           isFeatured: isFeatured ? 1 : 0,
-          status: status || "active",
+          status: status || "available",
           allowInstallment: allowInstallment ? 1 : 0,
           allowOnlinePrice: allowOnlinePrice ? 1 : 0,
+          thumbnail: thumbnailPath || thumbnail || null,
           updatedAt: new Date(),
         },
         { where: { idProduct } }
       );
 
-      // UPDATE bảng ProductImage (xóa cũ, thêm mới)
+      // UPDATE ProductImage
       if (images && images.length > 0) {
         await ProductImage.destroy({ where: { productId: idProduct } });
         await ProductImage.bulkCreate(
@@ -259,7 +272,7 @@ class ProductController {
         );
       }
 
-      // UPDATE bảng ProductSpec (xóa cũ, thêm mới)
+      // UPDATE ProductSpec
       if (specs && specs.length > 0) {
         await ProductSpec.destroy({ where: { productId: idProduct } });
         await ProductSpec.bulkCreate(

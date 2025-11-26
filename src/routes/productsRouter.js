@@ -6,7 +6,9 @@ const upload = multer({ storage });
 const router = express.Router();
 
 router.get("/", ProductsController.showAllProducts); // show all products
+
 router.get("/:slug", ProductsController.showOneProductBySlug); // show product by :slug
+
 router.post(
   "/add",
   upload.fields([
@@ -15,7 +17,8 @@ router.post(
   ]),
   ProductsController.createProduct
 ); // create new product
-router.put(
+
+router.patch(
   "/update/:idProduct",
   upload.fields([
     { name: "thumbnailPath", maxCount: 1 }, // 1 file thumbnail
@@ -23,5 +26,6 @@ router.put(
   ]),
   ProductsController.updateProduct
 );
+
 router.delete("/delete/:id", ProductsController.deleteProduct);
 export default router;

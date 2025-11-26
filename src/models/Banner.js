@@ -8,29 +8,31 @@ const Banner = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
     },
+
     title: {
       type: DataTypes.STRING(255),
       defaultValue: "",
     },
+
     image: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },
+
     link: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },
-    position: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
+
     isActive: {
       type: DataTypes.TINYINT,
       defaultValue: 0,
     },
+
     startDate: {
       type: DataTypes.DATE,
     },
+
     endDate: {
       type: DataTypes.DATE,
     },
