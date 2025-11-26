@@ -13,9 +13,7 @@ class ProductController {
       const { slug } = req.params;
       const product = await Product.findOne({
         where: { slug }, // truy vấn từ slug nhận vào
-        attributes: {
-          exclude: ["brandId", "categoryId", "tagId"], // BỎ NHỮNG CỘT KHÔNG MUỐN SHOW
-        },
+
         include: [
           {
             model: Brand,
@@ -71,9 +69,6 @@ class ProductController {
   async showAllProducts(req, res) {
     try {
       const products = await Product.findAll({
-        attributes: {
-          exclude: ["brandId", "categoryId", "tagId"], // BỎ NHỮNG CỘT KHÔNG MUỐN SHOW
-        },
         include: [
           {
             model: Brand,
