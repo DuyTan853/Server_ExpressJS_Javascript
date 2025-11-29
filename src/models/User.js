@@ -1,17 +1,17 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../databases/conectDatabase";
+import sequelize from "../databases/conectDatabase.js";
 
 const User = sequelize.define(
   "User",
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement,
+      autoIncrement: true,
     },
 
     idUser: {
       type: DataTypes.STRING,
-      primaryKey,
+      primaryKey: true,
     },
 
     fullName: {
@@ -39,14 +39,19 @@ const User = sequelize.define(
       allowNull: true,
     },
 
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
     role: {
       type: DataTypes.STRING,
       allowNull: false,
     },
 
-    avatar: {
+    permissions: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
 
     addresses: {

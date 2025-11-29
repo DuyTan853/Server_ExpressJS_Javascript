@@ -65,10 +65,71 @@ class ProductController {
     }
   }
 
-  // [GET] show all products
+  //[GET] show all products
   async showAllProducts(req, res) {
     try {
       const products = await Product.findAll({
+        include: [
+          {
+            model: Brand,
+            as: "brand",
+            attributes: ["nameBrand"], // show ra cột nameBrand
+          },
+          {
+            model: Category,
+            as: "category",
+            attributes: ["nameCategory"],
+          },
+          {
+            model: ProductSpec,
+            as: "specs",
+            attributes: [
+              "id",
+              "productId",
+              "screenSize",
+              "screenTechnology",
+              "rearCamera",
+              "frontCamera",
+              "chipset",
+              "internalMemory",
+              "battery",
+              "operatingSystem",
+              "screenResolution",
+              "screenFeatures",
+              "cpuType",
+              "compatibility",
+              "quantity",
+            ],
+          },
+          {
+            model: ProductImage,
+            as: "images",
+            attributes: ["imageUrl"],
+          },
+        ],
+      });
+
+      if (!products) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.status(200).json({ products });
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      res.status(500).json({ message: "Server Error", error: error.message });
+    }
+  }
+
+  // [GET] show products by page and limit
+  async showProductsByLimit(req, res) {
+    const page = parseInt(req.query.page) || 1; // trang hiện tại
+    const limit = parseInt(req.query.limit) || 10; // số bản ghi trên 1 trang
+    const offset = (page - 1) * limit; // bỏ qua bao nhiêu bản ghi
+
+    try {
+      const { count, rows } = await Product.findAndCountAll({
+        offset: offset,
+        limit: limit,
         include: [
           {
             model: Brand,
@@ -92,7 +153,12 @@ class ProductController {
           },
         ],
       });
-      res.status(200).json({ products });
+      res.status(200).json({
+        products: rows,
+        totalItems: count,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+      });
     } catch (error) {
       console.error("Error fetching all products:", error);
       res.status(500).json({ message: "Server Error", error: error.message });
@@ -113,8 +179,6 @@ class ProductController {
     const images = (imagesFile || []).map((file) => ({
       imageUrl: `${file.filename}`,
     }));
-
-    console.log(">>>>>>>>>>>>>>>>>>", thumbnailPath);
 
     try {
       const {

@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.get("/", ProductsController.showAllProducts); // show all products
 
+router.get("/pagination", ProductsController.showProductsByLimit); // show products by limit
+
 router.get("/:slug", ProductsController.showOneProductBySlug); // show product by :slug
 
 router.post(

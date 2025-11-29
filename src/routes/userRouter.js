@@ -6,14 +6,20 @@ import { storage } from "../config/configMulter.js";
 const upload = multer({ storage });
 const router = express.Router();
 
+router.get("/pagination", UserController.showAllUsersByLimit);
+
 router.get("/:idUser", UserController.showUserById);
+
 router.get("/", UserController.showAllUsers);
-router.post("/add", upload.single("image"), UserController.createUser);
+
+router.post("/add", upload.single("avatarFile"), UserController.createUser);
+
 router.patch(
   "/update/:idUser",
-  upload.single("image"),
+  upload.single("avatar"),
   UserController.updateUser
 );
+
 router.delete("/delete/:idUser", UserController.deleteUser);
 
 export default router;

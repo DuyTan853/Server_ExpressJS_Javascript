@@ -19,6 +19,9 @@ const ProductImage = sequelize.define(
       type: DataTypes.INTEGER,
     },
   },
-  { tableName: "productImages", timestamps: false }
+  {
+    tableName: "productImages",
+    timestamps: false,
+  }
 );
 export default ProductImage;

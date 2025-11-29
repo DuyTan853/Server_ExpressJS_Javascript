@@ -3,6 +3,9 @@ import Brand from "./Brand.js";
 import Category from "./Category.js";
 import ProductSpec from "./ProductSpec.js";
 import ProductImage from "./ProductImage.js";
+import Status from "./Status.js";
+import User from "./User.js";
+import Role from "./Role.js";
 
 // Product → Brand
 Product.belongsTo(Brand, {
@@ -48,4 +51,13 @@ Product.hasMany(ProductImage, {
   as: "images",
 });
 
-export { Product, Brand, Category, ProductSpec, ProductImage };
+export {
+  Product,
+  Brand,
+  Category,
+  ProductSpec,
+  ProductImage,
+  Status,
+  User,
+  Role,
+};
