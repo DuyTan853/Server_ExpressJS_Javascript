@@ -6,6 +6,10 @@ import ProductImage from "./ProductImage.js";
 import Status from "./Status.js";
 import User from "./User.js";
 import Role from "./Role.js";
+import Cart from "./Cart.js";
+import Order from "./Order.js";
+import OrderItem from "./OrderItem.js";
+import ProductReview from "./ProductReview.js";
 
 // Product → Brand
 Product.belongsTo(Brand, {
@@ -51,6 +55,12 @@ Product.hasMany(ProductImage, {
   as: "images",
 });
 
+// Order -> OrderItem
+Order.hasMany(OrderItem, {
+  foreignKey: "orderId",
+  as: "orderItems",
+});
+
 export {
   Product,
   Brand,
@@ -60,4 +70,8 @@ export {
   Status,
   User,
   Role,
+  Cart,
+  Order,
+  OrderItem,
+  ProductReview,
 };

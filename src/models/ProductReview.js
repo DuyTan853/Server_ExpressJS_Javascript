@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../databases/conectDatabase.js";
 
-const Cart = sequelize.define(
-  "Cart",
+const productReview = sequelize.define(
+  "productReview",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -17,21 +17,32 @@ const Cart = sequelize.define(
 
     productId: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    quantity: {
-      type: DataTypes.INTEGER,
       allowNull: false,
     },
 
-    totalPrice: {
+    rating: {
       type: DataTypes.INTEGER,
+      defaultValue: 5,
+    },
+
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+
+    images: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
-    tableName: "carts",
+    tableName: "productReviews",
     timestamps: true,
   }
 );
-export default Cart;
+export default productReview;

@@ -84,7 +84,45 @@ class UserController {
     }
   }
 
-  async updateUser(req, res) {}
+  async updateUser(req, res) {
+    try {
+      // Lấy dữ liệu từ formData
+      const data = JSON.parse(req.body.FinalUser);
+
+      // Lấy avatar file (nếu có)
+      const avatarFile = req.file ? req.file.filename : null;
+      console.log("Updated avatar file:", avatarFile);
+
+      // Tìm user cần update theo idUser
+      const user = await User.findOne({ where: { idUser: data.idUser } });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Update thông tin user
+      await user.update({
+        fullName: data.fullName,
+        email: data.email,
+        userName: data.userName,
+        password: data.password,
+        phone: data.phone,
+        role: data.role,
+        permissions: data.permissions,
+        avatar: avatarFile || user.avatar, // nếu upload mới thì dùng file, không thì giữ avatar cũ
+        addresses: data.addresses,
+        isVerified:
+          data.isVerified !== undefined ? data.isVerified : user.isVerified,
+        updatedAt: new Date(),
+      });
+
+      return res
+        .status(200)
+        .json({ message: "User updated successfully", user });
+    } catch (error) {
+      console.log("Error updating User:", error);
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  }
 
   async deleteUser(req, res) {
     try {

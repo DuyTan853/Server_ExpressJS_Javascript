@@ -16,7 +16,7 @@ router.post("/add", upload.single("avatarFile"), UserController.createUser);
 
 router.patch(
   "/update/:idUser",
-  upload.single("avatar"),
+  upload.single("avatarFile"),
   UserController.updateUser
 );
 

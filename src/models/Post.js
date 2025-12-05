@@ -1,37 +1,34 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../databases/conectDatabase.js";
+import sequelize from "../databases/conectDatabase";
 
-const Cart = sequelize.define(
-  "Cart",
+const Post = sequelize.define(
+  "Post",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-
     userId: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
-    productId: {
+    title: {
       type: DataTypes.STRING,
-      allowNull: true,
-    },
-    quantity: {
-      type: DataTypes.INTEGER,
       allowNull: false,
     },
-
-    totalPrice: {
-      type: DataTypes.INTEGER,
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
-    tableName: "carts",
+    tableName: "posts",
     timestamps: true,
   }
 );
-export default Cart;
+export default Post();

@@ -7,6 +7,7 @@ const Banner = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
 
     title: {
