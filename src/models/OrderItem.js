@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../databases/conectDatabase.js";
 
 const OrderItem = sequelize.define(
-  "OrderItem",
+  "orderItem",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,7 +13,7 @@ const OrderItem = sequelize.define(
     orderId: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
+    } /*  */,
 
     productId: {
       type: DataTypes.STRING,
@@ -41,7 +41,7 @@ const OrderItem = sequelize.define(
     },
   },
   {
-    tableName: "OrderItems",
+    tableName: "orderItems",
     timestamps: true,
   }
 );
