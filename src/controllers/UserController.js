@@ -1,4 +1,7 @@
+import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from "uuid"; // thư viện cung cấp id unique toàn cầu
 import { User } from "../models/index.js";
+
 class UserController {
   async showUserById(req, res) {
     try {
@@ -59,19 +62,21 @@ class UserController {
 
       // lấy avatar phải giống multer upload ở Router
       const avatarFile = req.file ? req.file.filename : null;
-      console.log(">>>>>", avatarFile);
+
+      // mã hóa password
+      const hashPassword = await bcrypt.hash(data.password.trim(), 10);
 
       const user = await User.create({
-        idUser: "User-" + data.idUser,
-        fullName: data.fullName,
-        email: data.email,
-        userName: data.userName,
-        password: data.password,
-        phone: data.phone,
-        role: data.role,
-        permissions: data.permissions,
-        avatar: avatarFile || data.avatar,
-        addresses: data.addresses,
+        idUser: "User-" + uuidv4(),
+        fullName: data.fullName || null,
+        email: data.email || null,
+        userName: data.userName || null,
+        password: hashPassword,
+        phone: data.phone || null,
+        role: data.role || null,
+        permissions: data.permissions || null,
+        avatar: avatarFile || data.avatar || null,
+        addresses: data.addresses || null,
         isVerified: data.isVerified || 1,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -93,6 +98,8 @@ class UserController {
       const avatarFile = req.file ? req.file.filename : null;
       console.log("Updated avatar file:", avatarFile);
 
+      const hashPassword = await bcrypt.hash(data.password.trim(), 10);
+
       // Tìm user cần update theo idUser
       const user = await User.findOne({ where: { idUser: data.idUser } });
       if (!user) {
@@ -104,7 +111,7 @@ class UserController {
         fullName: data.fullName,
         email: data.email,
         userName: data.userName,
-        password: data.password,
+        password: hashPassword,
         phone: data.phone,
         role: data.role,
         permissions: data.permissions,

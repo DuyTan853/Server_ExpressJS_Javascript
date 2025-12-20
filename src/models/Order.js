@@ -12,56 +12,72 @@ const Order = sequelize.define(
 
     userId: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     idOrder: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     subTotal: {
       type: DataTypes.DECIMAL(14, 2),
-      allowNull: false,
+      allowNull: true,
     },
 
     discount: {
       type: DataTypes.DECIMAL(14, 2),
-      allowNull: false,
+      allowNull: true,
     },
 
     shippingFree: {
       type: DataTypes.DECIMAL(14, 2),
-      allowNull: false,
+      allowNull: true,
     },
 
     total: {
       type: DataTypes.DECIMAL(14, 2),
-      allowNull: false,
+      allowNull: true,
     },
 
     paymentMethod: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     paymentStatus: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     status: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     voucherCode: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     isConfirm: {
       type: DataTypes.TINYINT,
       defaultValue: 0,
+    },
+    recipient: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    address: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    note: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
   },
   {

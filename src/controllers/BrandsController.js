@@ -1,4 +1,4 @@
-import { Brand } from "../models/index.js";
+import { Brand, Category } from "../models/index.js";
 
 class BrandsController {
   // [GET] show all brands
@@ -16,9 +16,12 @@ class BrandsController {
   async addBrand(req, res) {
     try {
       const nameBrand = req.body.nameBrand;
+      const category = req.body.category;
       const logo = req.file ? req.file.filename : null; //Nhận file từ req
+
       const brand = await Brand.create({
         nameBrand: nameBrand,
+        category: category,
         logo: logo,
         isActive: 1,
       });
@@ -32,12 +35,13 @@ class BrandsController {
   async updateBrand(req, res) {
     try {
       const { id } = req.params;
-      const { nameBrand, isActive } = req.body;
+      const { nameBrand, category, isActive } = req.body;
       const logo = req.file ? req.file.filename : null;
 
       // Chuẩn bị object update, chỉ include những trường có giá trị
       const updateData = {};
       if (nameBrand !== undefined) updateData.nameBrand = nameBrand;
+      if (category !== undefined) updateData.category = category;
       if (logo !== null) updateData.logo = logo;
       if (isActive !== undefined) updateData.isActive = isActive;
 

@@ -12,7 +12,7 @@ const Cart = sequelize.define(
 
     userId: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     productId: {
@@ -21,12 +21,17 @@ const Cart = sequelize.define(
     },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
 
     totalPrice: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+    },
+    
+    count: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
   },
   {

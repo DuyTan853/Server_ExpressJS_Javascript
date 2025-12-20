@@ -1,17 +1,21 @@
 import { Order, OrderItem } from "../models/index.js";
-
+import { v4 as uuidv4 } from "uuid"; // thư viện cung cấp id unique toàn cầu
 class OrderController {
   // [GET] show all Order
   async showAllOrders(req, res) {
+    console.log(req.user.userId);
     try {
-      const orders = await Order.findAll({
-        include: [
-          {
-            model: OrderItem,
-            as: "orderItems",
-          },
-        ],
-      });
+      const orders = await Order.findAll(
+        { where: { userId: req.user.userId } },
+        {
+          include: [
+            {
+              model: OrderItem,
+              as: "orderItems",
+            },
+          ],
+        }
+      );
       res.status(200).json({ orders });
     } catch (error) {
       console.error("Error fetching all Cart:", error);
@@ -36,21 +40,29 @@ class OrderController {
         status,
         voucherCode,
         isConfirm,
+        recipient,
+        phone,
+        address,
+        note,
       } = data;
 
       const order = await Order.create(
         {
           userId,
-          idOrder,
-          subTotal,
-          discount,
-          shippingFree,
-          total,
+          idOrder: "ORDER-" + uuidv4(),
+          subTotal: Number(data.subTotal),
+          discount: Number(data.discount),
+          shippingFree: Number(data.shippingFree),
+          total: Number(data.total),
           paymentMethod,
           paymentStatus,
           status,
           voucherCode,
           isConfirm,
+          recipient,
+          phone,
+          address,
+          note,
 
           orderItems: data.orderItem.map((item) => ({
             orderId: data.idOrder,
@@ -70,7 +82,6 @@ class OrderController {
           ],
         }
       );
-
       return res.status(201).json({ message: "Add cart complete", order });
     } catch (error) {
       console.error("Error creating status:", error);

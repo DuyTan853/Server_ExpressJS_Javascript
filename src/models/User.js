@@ -16,22 +16,22 @@ const User = sequelize.define(
 
     fullName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     userName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     phone: {
@@ -46,12 +46,12 @@ const User = sequelize.define(
 
     role: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     permissions: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
 
     addresses: {

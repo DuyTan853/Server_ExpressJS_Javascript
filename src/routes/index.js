@@ -10,7 +10,7 @@ import cartRouter from "./cartRouter.js";
 import orderRouter from "./orderRouter.js";
 import productReviewRouter from "./productReviewRouter.js";
 import productQuestionRouter from "./productQuestionRouter.js";
-
+import authRouter from "./authRouter.js";
 // RESTful API
 function routes(app) {
   app.use("/products", productsRouter);
@@ -25,5 +25,6 @@ function routes(app) {
   app.use("/orders", orderRouter);
   app.use("/productReview", productReviewRouter);
   app.use("/productQuestion", productQuestionRouter);
+  app.use("/auth", authRouter);
 }
 export default routes;

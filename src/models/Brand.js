@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../databases/conectDatabase.js";
+import Category from "./Category.js";
 
 const Brand = sequelize.define(
   "Brand",
@@ -10,6 +11,10 @@ const Brand = sequelize.define(
       autoIncrement: true,
     },
     nameBrand: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    category: {
       type: DataTypes.STRING,
       allowNull: false,
     },
